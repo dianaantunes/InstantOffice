@@ -1,8 +1,0 @@
-DO
-$do$
-BEGIN -- BEGIN ISOLATION LEVEL SERIALIZABLE;
-FOR i IN 1..1000 LOOP
-   DELETE FROM reserva WHERE reserva.numero IN (SELECT numero FROM reserva LIMIT 1000);
-END LOOP;
-END -- COMMIT
-$do$;
