@@ -1,0 +1,27 @@
+a)
+SELECT DISTINCT customer_name FROM account NATURAL JOIN depositor WHERE balance > 500;
+
+b)
+SELECT DISTINCT customer_city FROM loan NATURAL JOIN borrower NATURAL JOIN customer WHERE amount < 2000 AND amount > 1000;
+
+c)
+SELECT balance * 1.1 FROM account WHERE branch_name = "Downtown";
+
+d)
+SELECT balance FROM borrower NATURAL JOIN depositor NATURAL JOIN account WHERE loan_number = "L-15";
+SELECT SUM(balance) FROM borrower NATURAL JOIN depositor NATURAL JOIN account WHERE loan_number = "L-15";
+
+e)
+SELECT DISTINCT customer_name FROM customer, branch WHERE customer_city = branch_city;
+
+f)
+SELECT assets FROM borrower NATURAL JOIN account NATURAL JOIN branch WHERE customer_name = "Jones";
+
+g)
+SELECT branch_name FROM account NATURAL JOIN depositor WHERE customer_name LIKE 'J%S';
+
+h)
+SELECT amount FROM loan NATURAL JOIN borrower NATURAL JOIN customer WHERE customer_street LIKE "____";
+
+i)
+SELECT customer_name FROM customer NATURAL JOIN borrower NATURAL JOIN loan NATURAL JOIN branch WHERE customer_city = branch_city;

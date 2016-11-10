@@ -1,0 +1,88 @@
+a)
+
+SELECT customer_name, customer_street, customer_city
+FROM depositor NATURAL JOIN customer
+WHERE customer_name NOT IN
+  (SELECT customer_name
+  FROM borrower);
+
+b)
+
+SELECT customer_name, AVG(balance)
+FROM branch NATURAL JOIN account NATURAL JOIN depositor
+WHERE branch_city = "Brooklyn"
+GROUP BY customer_name;
+
+c)
+
+SELECT count(customer_name)
+FROM branch NATURAL JOIN account NATURAL JOIN depositor NATURAL JOIN customer
+WHERE branch_city = customer_city;
+
+d)
+
+SELECT sum(balance)
+FROM branch NATURAL JOIN account
+WHERE branch_city = "Brooklyn";
+
+f)
+
+SELECT customer_name, customer_street, customer_city, SUM(amount)
+FROM loan NATURAL JOIN borrower NATURAL JOIN customer
+GROUP BY customer_name
+HAVING SUM(amount) >= ALL  (
+  SELECT SUM(amount)
+  FROM loan NATURAL JOIN borrower
+  GROUP BY customer_name
+);
+
+g)
+
+SELECT customer_name, customer_street, customer_city, SUM(balance)
+FROM account NATURAL JOIN depositor NATURAL JOIN customer
+GROUP BY customer_name
+HAVING SUM(balance) >= ALL  (
+  SELECT SUM(balance)
+  FROM account NATURAL JOIN depositor
+  GROUP BY customer_name
+);
+
+h)
+
+SELECT branch_name
+FROM account
+GROUP BY branch_name
+HAVING COUNT(*) >= ALL (
+  SELECT COUNT(account_number)
+  FROM account
+  GROUP BY branch_name
+);
+
+j)
+
+SELECT customer_name
+FROM borrower
+GROUP BY customer_name
+HAVING COUNT(*) > 2
+ORDER BY customer_name;
+
+l)
+
+SELECT branch_city
+FROM (
+  ((SELECT customer_name, branch_city
+  FROM branch NATURAL JOIN account NATURAL JOIN depositor)
+  UNION
+  (SELECT customer_name, branch_city
+  FROM branch NATURAL JOIN loan NATURAL JOIN borrower)) AS cust
+)
+GROUP BY branch_city
+HAVING COUNT(distinct (customer_name)) >= ALL
+(
+  ((SELECT customer_name, branch_city
+  FROM branch NATURAL JOIN account NATURAL JOIN depositor)
+  UNION
+  (SELECT customer_name, branch_city
+  FROM branch NATURAL JOIN loan NATURAL JOIN borrower)) AS cust
+  GROUP BY branch_city
+);
