@@ -1,8 +1,11 @@
 # Database access
 
-'
-      db.ist.utl.pt
-   login: ist178974
-database: ist178974
-password: luix0324
-'
+<code>host: db.ist.utl.pt </code>
+
+<code>login: ist178974 </code>
+
+<code>database: ist178974 </code>
+
+<code>password: luix0324 </code>
+
+
