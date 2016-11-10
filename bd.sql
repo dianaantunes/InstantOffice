@@ -176,7 +176,8 @@ insert into oferta	values ('Av. da Republica',		008, '2015-07-01', '2020-07-01',
 insert into oferta	values ('Alameda D. Afonso',	009, '2016-01-01', '2021-01-01', 600);
 
 insert into aluga values ('Rua Alves Redol', 007, '2011-06-01', 242597878, 1);
-insert into aluga values ('Rua Dr. Alberto', 006, '2011-01-01', 242597878, 2);
+insert into aluga values ('Av. da Liberdade', 002, '2010-01-01', 242597878, 2);
+insert into aluga values ('Av. da Liberdade', 002, '2015-01-01', 242597878, 3);
 
 insert into paga values (1, '2011-06-01', 'VISA');
 
