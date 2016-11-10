@@ -5,10 +5,11 @@ CREATE TRIGGER pay_date_check
 BEFORE UPDATE ON paga
 FOR EACH ROW
 BEGIN
-	IF NEW.data > ALL (SELECT timestamp FROM
+	-- NESTED LOOP?
+	IF NEW.data < ANY (SELECT timestamp FROM
 					estado
 					WHERE estado.numero = new.numero)
-	THEN insert into paga values (new.numero, new.data, new.metodo);
+	THEN insert into paga values (new.numero, CURRENT_DATE, new.metodo);
 	END IF;
 END //
 delimiter ;
