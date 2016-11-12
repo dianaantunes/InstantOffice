@@ -2,14 +2,13 @@
 
 DELIMITER //
 CREATE TRIGGER pay_date_check
-BEFORE UPDATE ON paga
+BEFORE INSERT ON paga
 FOR EACH ROW
 BEGIN
-	-- NESTED LOOP?
 	IF NEW.data < ANY (SELECT timestamp FROM
 					estado
 					WHERE estado.numero = new.numero)
-	THEN insert into paga values (new.numero, CURRENT_DATE, new.metodo);
+	THEN SET NEW.data = CURRENT_DATE; -- Caso contrario coloca a data atual
 	END IF;
 END //
 delimiter ;
