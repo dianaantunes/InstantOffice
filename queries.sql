@@ -1,3 +1,7 @@
+-- a)
+SELECT morada, codigo FROM posto p
+WHERE NOT EXISTS (SELECT a.morada FROM aluga a WHERE p.codigo = a.codigo);
+
 -- b)
 SELECT morada AS 'Numero de reservas superior a media' FROM aluga NATURAL JOIN reserva
 GROUP BY morada
