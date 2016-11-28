@@ -15,22 +15,22 @@ drop table utilizador cascade;
 drop table reserva cascade;
 
 create table reserva
-	(numero 	integer,
+	(numero 	integer		unique,
 	primary key(numero));
 
 create table utilizador
-	(nif 		numeric(9,0),
+	(nif 		numeric(9,0)	unique,
 	nome 		varchar(255),
  	telefone 	numeric(9,0),
  	primary key(nif));
 
 create table fiscal
-	(id		integer,
+	(id		integer		unique,
 	empresa	varchar(255),
  	primary key(id));
 
 create table edificio
-   (morada 	varchar(255),
+   (morada 	varchar(255)	unique,
     primary key(morada));
 
 create table alugavel
