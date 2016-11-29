@@ -12,7 +12,27 @@ HAVING COUNT(morada) >= (
 		) as temp
 );
 
+--c)
+SELECT nome
+FROM utilizador NATURAL JOIN aluga NATURAL JOIN alugavel NATURAL JOIN fiscaliza
+NATURAL JOIN fiscal
+GROUP BY nome
+HAVING COUNT(fiscal.id) < ALL (
+	SELECT COUNT(fiscal.id) FROM fiscal
+	GROUP BY nome
+);
+
 -- d)
 SELECT 365 * SUM(tarifa) AS 'Montante total realizado' FROM alugavel NATURAL JOIN
 	(SELECT * FROM oferta
 	WHERE data_inicio LIKE '2016%') as temp;
+
+-- e)
+SELECT morada, codigo
+FROM posto NATURAL JOIN aluga
+GROUP BY morada
+HAVING COUNT(morada) < ALL (
+	SELECT codigo FROM posto AS p NATURAL JOIN aluga AS a
+	WHERE p.codigo = a.codigo
+	GROUP BY morada
+);
