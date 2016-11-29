@@ -23,9 +23,10 @@ HAVING COUNT(fiscal.id) < ALL (
 );
 
 -- d)
-SELECT 365 * SUM(tarifa) AS 'Montante total realizado' FROM alugavel NATURAL JOIN
-	(SELECT * FROM oferta
-	WHERE data_inicio LIKE '2016%') as temp;
+SELECT 365 * SUM(tarifa) AS 'Montante total realizado'
+FROM alugavel NATURAL JOIN
+(SELECT * FROM oferta WHERE data_inicio < '2016-12-31' AND data_fim > '2016-01-01') as temp
+GROUP BY morada, codigo;
 
 -- e)
 SELECT morada, codigo
