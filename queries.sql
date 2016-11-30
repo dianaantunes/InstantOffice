@@ -1,6 +1,6 @@
 -- a)
-SELECT morada, codigo FROM posto p
-WHERE NOT EXISTS (SELECT a.morada FROM aluga a WHERE p.codigo = a.codigo);
+SELECT DISTINCT morada, codigo_espaco FROM posto p
+WHERE NOT EXISTS (SELECT morada FROM aluga a WHERE p.codigo = a.codigo);
 
 -- b)
 SELECT morada AS 'Numero de reservas superior a media' FROM aluga NATURAL JOIN reserva
@@ -36,11 +36,13 @@ FROM alugavel NATURAL JOIN
 GROUP BY morada, codigo;
 
 -- e)
-SELECT morada, codigo
+SELECT DISTINCT morada, codigo_espaco
 FROM posto
 NATURAL JOIN(
-	SELECT 
-)
+	SELECT numero, estado FROM aluga NATURAL JOIN estado
+	GROUP BY numero
+	HAVING estado = 'aceite'
+) AS cenas;
 
 
 -- SELECT morada, codigo
@@ -50,4 +52,4 @@ NATURAL JOIN(
 -- 	SELECT codigo FROM posto AS p NATURAL JOIN aluga AS a
 -- 	WHERE p.codigo = a.codigo
 -- 	GROUP BY morada
-);
+-- );
