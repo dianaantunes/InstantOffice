@@ -6,15 +6,20 @@ CREATE TRIGGER overlapping_offers
 BEFORE INSERT ON oferta
 FOR EACH ROW
 BEGIN
-     set @data_inicio = (SELECT new.data_inicio);
-     set @data_fim = (SELECT new.data_fom);
-     set @mensagem = concat('A reserva com data de inicio ', @data_inicio, 'e com a data fim ', @data_fim, 'ja existe.');
+begin 
+	DECLARE data_inicio DATE;
+    DECLARE data_fim DATE;
 
-IF NEW.codigo == (SELECT codigo FROM oferta ) then 
-IF NEW.data_inicio < (SELECT data_fim FROM oferta) AND
-NEW.data_fim > (SELECT data_inicio FROM oferta) then
-call error;
-END IF;
+	SET data_inicio = (select data_inicio from oferta where morada = new.morada AND codigo = new.codigo);
+
+	SET data_fim = (select data_fim from oferta where morada = new.morada AND codigo = new.codigo);
+
+	IF (new.data_inicio > data_inicio AND new.data_fim < data_fim)
+		OR (new.data_inicio<data_inicio AND new.data fim > data_inicio)
+		OR (new.data_inicio > data_inicio AND new.data_fim > data_fim )
+		THEN
+	CALL ERROR;
+	END IF;
 END //
 delimiter ;
 
