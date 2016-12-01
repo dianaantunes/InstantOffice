@@ -28,11 +28,22 @@ FROM alugavel NATURAL JOIN
 GROUP BY morada, codigo;
 
 -- e)
+	SELECT COUNT(morada)
+	FROM (SELECT * FROM posto NATURAL JOIN estado) AS cenas GROUP BY morada;
+
+-- SELECT DISTINCT morada, codigo_espaco FROM posto p
+-- WHERE NOT EXISTS (
+-- 	SELECT morada, estado
+-- 	FROM aluga a NATURAL JOIN estado e
+-- 	WHERE e.estado = 'paga' AND e.estado = 'pendente'
+-- );
+
+
 SELECT DISTINCT morada, codigo_espaco
 FROM posto
 NATURAL JOIN(
 	SELECT numero, estado FROM aluga NATURAL JOIN estado
-	GROUP BY numero
+	GROUP BY codigo_espaco
 	HAVING estado = 'aceite'
 ) AS temp;
 
