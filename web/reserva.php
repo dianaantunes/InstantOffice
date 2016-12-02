@@ -46,7 +46,6 @@
 
 					$connection = new PDO("mysql:host=" . $host. ";dbname=" . $dbname, $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
 
-					//echo("<p>Connected to MySQL database $dbname on $host as user $user</p>\n");
 					try{
 
 					$sql = "SELECT R.* FROM reserva R, aluga A
@@ -57,12 +56,9 @@
 					$stmt->bindParam(':codigo', $codigo); 
 					$stmt->bindParam(':data_inicio', $data_inicio); 
 					$stmt->execute();
-
-					//echo("<p>Query: " . $sql . "</p>\n");
-
 					$result = $stmt->fetchAll();
-					
 					$num = count($result);
+					  
 					echo("<p>$num Reservas em Oferta $morada, $codigo, $data_inicio:</p>\n");
 					echo("<table border=\"5\">\n");
 					echo("<tr><td> Numero </td></tr>\n");
@@ -70,7 +66,15 @@
 					{
 						echo("<tr>");
 						echo("<td>{$row["numero"]}</td>");
-						echo("<td><a href=\"pagar.php?numero={$row['numero']}\" style='color:aqua; text-decoration: none;'> Pagar </a></td>\n");
+						$numero = $row["numero"];
+						$sql2 = "SELECT numero FROM paga
+						WHERE numero = '$numero'";
+						$result2 = $connection->query($sql2);
+						$isPaga = $result2->rowCount();
+						// Se a reserva nao esta paga, aparece a opcao para pagar
+						if (!$isPaga) {
+							echo("<td><a href=\"pagar.php?numero={$row['numero']}\" style='color:aqua; text-decoration: none;'> Pagar </a></td>\n");
+						}
 						echo("</tr>\n");
 					}
 					echo("</table>\n");
@@ -78,16 +82,12 @@
 				    $connection = null;
 
 				    echo ("<br><a href=\"http://web.ist.utl.pt/ist182448/BD/\"style='color:gold; text-decoration: none;'> Menu Principal </a>");
+					
 					}
 					catch (PDOException $e)
 					{
 						echo("<p>ERROR: {$e->getMessage()}</p>");
 					}
-					
-					//echo("<p>Connection closed.</p>\n");
-
-					//echo("<p>Test completed successfully.</p>\n");
-
 				?>
 			</div>
         </article>

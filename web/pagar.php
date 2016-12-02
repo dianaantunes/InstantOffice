@@ -33,12 +33,6 @@
 					echo ("<a href=\"http://web.ist.utl.pt/ist182448/BD/reserva.php?morada={$_SESSION['morada']}&codigo={$_SESSION['codigo']}&data_inicio={$_SESSION['data_inicio']}\"style='color:gold; text-decoration: none;'> Cancelar </a>");
 
 				    echo ("<br><a href=\"http://web.ist.utl.pt/ist182448/BD/\"style='color:gold; text-decoration: none;'> Menu Principal </a>");
-					
-					
-					//echo("<p>Connection closed.</p>\n");
-
-					//echo("<p>Test completed successfully.</p>\n");
-
 				?>
 			</div>
         </article>

@@ -37,15 +37,11 @@
 
 					$connection = new PDO("mysql:host=" . $host. ";dbname=" . $dbname, $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
 
-					//echo("<p>Connected to MySQL database $dbname on $host as user $user</p>\n");
-
 					$sql = "SELECT * FROM oferta;";
-
-					//echo("<p>Query: " . $sql . "</p>\n");
-
-					$result = $connection->query($sql);
-					
-					$num = $result->rowCount();
+					$stmt = $connection->prepare($sql); 
+					$stmt->execute();
+					$result = $stmt->fetchAll();
+					$num = count($result);
 
 					echo("<p>$num Ofertas:</p>\n");
 
@@ -70,11 +66,6 @@
 				    $connection = null;
 
 				    echo ("<br><a href=\"http://web.ist.utl.pt/ist182448/BD/\"style='color:gold; text-decoration: none;'> Menu Principal </a>");
-					
-					//echo("<p>Connection closed.</p>\n");
-
-					//echo("<p>Test completed successfully.</p>\n");
-
 				?>
 			</div>
         </article>

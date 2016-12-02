@@ -15,9 +15,7 @@
                 <p> Projecto de Bases de Dados: Parte 3 </p>
 				
 				<?php
-				//echo("ping");
 					include 'functions.php';
-					echo("ping");
 					session_start();
 					$morada = $_REQUEST['morada'];
 					$codigo = $_REQUEST['codigo'];
@@ -41,7 +39,6 @@
 
     				$connection = new PDO("mysql:host=" . $host. ";dbname=" . $dbname, $user, $password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-					//echo("<p>Connected to MySQL database $dbname on $host as user $user</p>\n");
 					try
 	    			{
 	    				$connection->beginTransaction();
@@ -66,16 +63,24 @@
 				    		$_SESSION['codigo'] = $_SESSION['codigo_espaco'];
 				    		}
 
-
 						elseif ($page == 'oferta'){
 							insereOferta($morada, $codigo, $data_inicio, $data_fim, $tarifa);
 							$connection->commit();
 							echo("<p> Oferta inserida com sucesso.</p>\n");
+						}
+
+						elseif ($page == 'reserva'){
+							insereReserva($morada, $codigo, $data_inicio, $nif, $numero);
+							$connection->commit();
+							echo("<p> Reserva inserida com sucesso.</p>\n");
 						}		
+
 						elseif ($page == 'pagar'){
 							inserePaga($numero, $metodo);
 							$connection->commit();
 							echo("<p> Reserva paga.</p>\n");
+							//Just to be able to go back and dont return to pagar menu
+							$_SESSION['page'] = 'reserva';
 						}													
 					}
 				    catch (PDOException $e)

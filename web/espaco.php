@@ -26,6 +26,11 @@
            	 		<p> URL Foto:<input type="text" name="foto"></p>
             		<p><input type="submit" value="Inserir"></p>
         		</form>
+
+        		<form action="total.php" method="post">
+					<p><input type="hidden" name="morada" value="<?=$_REQUEST['morada']?>"></p>
+            		<p><input type="submit" value="Listar Total € por Espaco em <?=$_REQUEST['morada']?>"></p>
+        		</form>
         		<?php
 					$morada = $_REQUEST['morada'];
 
@@ -38,15 +43,13 @@
 
 					$connection = new PDO("mysql:host=" . $host. ";dbname=" . $dbname, $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
 
-					//echo("<p>Connected to MySQL database $dbname on $host as user $user</p>\n");
-
+					try{
 					$sql = "SELECT * FROM espaco WHERE morada = '$morada';";
-
-					//echo("<p>Query: " . $sql . "</p>\n");
-
-					$result = $connection->query($sql);
-					
-					$num = $result->rowCount();
+					$stmt = $connection->prepare($sql); 
+					$stmt->bindParam(':morada', $morada); 
+					$stmt->execute();
+					$result = $stmt->fetchAll();
+					$num = count($result);
 
 					echo("<p>$num Espaços de Trabalho em $morada:</p>\n");
 					echo("<table border=\"5\">\n");
@@ -56,24 +59,20 @@
 						echo("<tr>");
 						echo("<td>{$row["morada"]}</td>");
 						echo("<td>{$row["codigo"]}</td>");
-						$total = calcularTotal();
 						echo("<td><a href=\"posto.php?morada={$row['morada']}&codigo={$row['codigo']}\" style='color:aqua; text-decoration: none;'> Ver </a></td>\n");
 						echo("<td><a href=\"remove.php?morada={$row['morada']}&codigo={$row['codigo']}\" style='color:aqua; text-decoration: none;'> Remover </a></td>\n");
 						echo("</tr>\n");
 					}
 					echo("</table>\n");
-						
+					
+					}
+				    catch (PDOException $e)
+					{
+						echo("<p>ERROR: {$e->getMessage()}</p>");
+					}	
 				    $connection = null;
 
 				    echo ("<br><a href=\"http://web.ist.utl.pt/ist182448/BD/\"style='color:gold; text-decoration: none;'> Menu Principal </a>");
-				    function calcularTotal(){
-				    	
-				    }
-					
-					//echo("<p>Connection closed.</p>\n");
-
-					//echo("<p>Test completed successfully.</p>\n");
-
 				?>
 			</div>
         </article>

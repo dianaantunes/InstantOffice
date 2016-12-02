@@ -28,7 +28,7 @@
 
     				$connection = new PDO("mysql:host=" . $host. ";dbname=" . $dbname, $user, $password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-					//echo("<p>Connected to MySQL database $dbname on $host as user $user</p>\n");
+					
 					try
 	    			{
 	    				$connection->beginTransaction();
