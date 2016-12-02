@@ -13,7 +13,7 @@ HAVING COUNT(morada) >= (
 );
 
 --c)
-SELECT nome
+SELECT nif, nome
 FROM user
 NATURAL JOIN(
   SELECT nif FROM aluga NATURAL JOIN fiscaliza
