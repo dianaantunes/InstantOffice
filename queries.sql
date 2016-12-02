@@ -22,28 +22,27 @@ NATURAL JOIN(
 ) AS temp;
 
 -- d)
-SELECT dias * SUM(tarifa) AS 'Total'
-FROM alugavel NATURAL JOIN
-(SELECT DATEDIFF(data_inicio,data_fim) AS dias, morada, codigo, tarifa FROM oferta WHERE data_inicio < '2016-12-31' AND data_fim > '2016-01-01') as temp
-GROUP BY morada, codigo;
+SELECT morada, codigo_espaco, pago
+FROM
+(SELECT morada, codigo_espaco, sum((datediff(data_fim, data_inicio))*tarifa) as pago
+FROM oferta NATURAL JOIN aluga NATURAL JOIN paga NATURAL JOIN posto
+WHERE (data between '2016-01-01 00:00:01' and '2016-12-31 23:59:59')
+GROUP BY codigo_espaco, morada) as temp
+UNION
+(SELECT morada, codigo as codigo_espaco, sum((datediff(data_fim, data_inicio))*tarifa) as pago
+FROM oferta NATURAL JOIN aluga NATURAL JOIN paga NATURAL JOIN espaco
+WHERE (data between '2016-01-01 00:00:01' and '2016-12-31 23:59:59')
+GROUP BY codigo_espaco, morada);
 
 -- e)
-	SELECT COUNT(morada)
-	FROM (SELECT * FROM posto NATURAL JOIN estado) AS cenas GROUP BY morada;
-
--- SELECT DISTINCT morada, codigo_espaco FROM posto p
--- WHERE NOT EXISTS (
--- 	SELECT morada, estado
--- 	FROM aluga a NATURAL JOIN estado e
--- 	WHERE e.estado = 'paga' AND e.estado = 'pendente'
--- );
-
-
-SELECT DISTINCT morada, codigo_espaco
-FROM posto
-NATURAL JOIN(
-	SELECT numero, estado FROM aluga NATURAL JOIN estado
-	GROUP BY codigo_espaco
-	HAVING estado = 'aceite'
-) AS temp;
+SELECT morada, codigo_espaco
+FROM (SELECT morada, codigo_espaco, COUNT(codigo) as count
+	FROM posto
+	GROUP BY morada, codigo_espaco) as temp
+	NATURAL JOIN
+	(SELECT aceite.morada as morada, aceite.codigo_espaco as codigo_espaco, count(aceite.codigo) as count
+	FROM (SELECT DISTINCT morada, codigo_espaco, codigo
+		FROM posto NATURAL JOIN aluga NATURAL JOIN estado
+		WHERE estado = 'aceite') AS aceite
+GROUP BY morada, codigo_espaco) as total_aceite;
 
