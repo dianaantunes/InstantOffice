@@ -7,9 +7,9 @@ BEFORE INSERT ON oferta
 FOR EACH ROW
 BEGIN
 	IF exists(SELECT * FROM oferta WHERE codigo = NEW.codigo AND morada = NEW.morada 
-                    AND new.data_inicio >= data_inicio AND new.data_inicio <= data_fim)
-					OR (new.data_fim >= data_inicio AND new.data_fim <= data_fim)
-					OR (new.data_inicio <= data_inicio AND new.data_fim >= data_fim)
+                    AND ((new.data_inicio >= data_inicio AND new.data_inicio <= data_fim)
+						OR (new.data_fim >= data_inicio AND new.data_fim <= data_fim)
+						OR (new.data_inicio <= data_inicio AND new.data_fim >= data_fim)))
                     THEN call erro_overlapping_offers();
         END IF;
 END //
