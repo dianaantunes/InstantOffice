@@ -1,0 +1,52 @@
+1. SELECT week_day_name, AVG(reading)
+    FROM meter_readings NATURAL JOIN date_dimension
+    GROUP BY week_day_name;
+
+2. SELECT week_number, building_name, AVG(reading)
+   FROM meter_readings NATURAL JOIN date_dimension NATURAL JOIN building_dimension
+   WHERE week_number IN (50, 51, 52)
+   GROUP BY week_number, building_name;
+
+3. SELECT week_number, AVG(reading)
+   FROM meter_readings NATURAL JOIN date_dimension
+   WHERE week_number IN (50, 51, 52)
+   GROUP BY week_number;
+
+4. SELECT building_name, AVG(reading) as average
+   FROM meter_readings NATURAL JOIN building_dimension
+   GROUP BY building_name
+   ORDER BY average DESC;
+
+5. SELECT week_day_name, building_name, AVG(reading) as average
+   FROM meter_readings NATURAL JOIN building_dimension NATURAL JOIN date_dimension
+   GROUP BY week_day_name, building_name
+   ORDER BY average DESC;
+
+6. SELECT day_period, week_day_name, building_name, AVG(reading) as average
+   FROM meter_readings NATURAL JOIN building_dimension NATURAL JOIN date_dimension NATURAL JOIN time_dimension
+   GROUP BY day_period, week_day_name, building_name
+   ORDER BY average DESC;
+
+7. SELECT day_period, hour_of_day, building_name, AVG(reading) as average
+   FROM meter_readings NATURAL JOIN building_dimension NATURAL JOIN time_dimension
+   GROUP BY building_name, day_period, hour_of_day WITH ROLLUP;
+
+9. SELECT day_period, AVG(avg_reading)
+   FROM results
+   WHERE hour_of_day IS NULL AND day_period IS NOT NULL AND building_name IS NOT NULL
+   GROUP BY day_period
+   HAVING AVG(avg_reading) >= ALL (SELECT avg_reading
+                                   FROM results
+                                   WHERE building_name IS NULL);
+
+10.SELECT day_period, hour_of_day, building_name, AVG(reading) as average
+   FROM meter_readings NATURAL JOIN building_dimension NATURAL JOIN time_dimension
+   GROUP BY building_name, day_period, hour_of_day WITH ROLLUP
+   UNION
+   SELECT day_period, hour_of_day, building_name, AVG(reading) as average
+   FROM meter_readings NATURAL JOIN building_dimension NATURAL JOIN time_dimension
+   GROUP BY hour_of_day, building_name, day_period WITH ROLLUP
+   UNION
+   SELECT day_period, hour_of_day, building_name, AVG(reading) as average
+   FROM meter_readings NATURAL JOIN building_dimension NATURAL JOIN time_dimension
+   GROUP BY day_period, hour_of_day, building_name WITH ROLLUP;
