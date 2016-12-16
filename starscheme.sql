@@ -3,10 +3,10 @@
 --
 DROP TABLE IF EXISTS location_dimension;
 CREATE TABLE location_dimension (
-  location_id 	int(11) 	NOT NULL,
-  morada 		varchar(255) 	NOT NULL,
-  codigo_espaco varchar(255) 	NOT NULL,
-  codigo_posto 	varchar(255)
+  	location_id 				int(11) 		NOT NULL,
+  	location_morada 			varchar(255) 	NOT NULL,
+  	location_codigo_espaco 		varchar(255) 	NOT NULL,
+  	location_codigo_posto 		varchar(255)
 );
 --
 -- Dumping data for table `location_dimension`
@@ -14,9 +14,9 @@ CREATE TABLE location_dimension (
 SET @count = 0;
 INSERT INTO location_dimension
 	SELECT  @count:=@count+1 AS location_id,
-			espaco.morada AS morada,
-			espaco.codigo AS codigo_espaco,
-			posto.codigo AS codigo_posto FROM
+			espaco.morada AS location_morada,
+			espaco.codigo AS location_codigo_espaco,
+			posto.codigo AS location_codigo_posto FROM
 	espaco LEFT JOIN posto
 	ON espaco.codigo = posto.codigo_espaco
 ;
@@ -25,35 +25,39 @@ INSERT INTO location_dimension
 --
 DROP TABLE IF EXISTS user_dimension;
 CREATE TABLE user_dimension (
-	user_id		varchar(9) 		NOT NULL,
-  nif		varchar(9) 		NOT NULL,
-  nome 		varchar(80) 	NOT NULL,
-  telefone 	varchar(26) 	NOT NULL
+	user_id			int(11) 		NOT NULL,
+  	user_nif		varchar(9) 		NOT NULL,
+  	user_nome 		varchar(80) 	NOT NULL,
+  	user_telefone 	varchar(26) 	NOT NULL
 );
 --
 -- Dumping data for table `user_dimension`
 --
 SET @count = 0;
 INSERT INTO user_dimension
-	SELECT @count:=@count+1 AS user_id, nif, nome, telefone FROM user
+	SELECT @count:=@count+1 AS user_id,
+			nif AS user_nif,
+			nome AS user_nome,
+			telefone AS user_telefone
+	FROM user
 ;
 --
 -- Table structure for table `date_dimension`
 --
 DROP TABLE IF EXISTS date_dimension;
 CREATE TABLE date_dimension (
-  date_id 	           int(11) 		NOT NULL,
-  date_year      	 int(11) 		NOT NULL,
-  date_semester      	 int(11) 		NOT NULL,
-  date_month_number 	 int(11) 		NOT NULL,
-  date_week 	         int(11) 		NOT NULL,
-  date_day 		         int(11) 		NOT NULL
+  	date_id 	          	int(11) 		NOT NULL,
+  	date_year      	 		int(11) 		NOT NULL,
+  	date_semester      	 	int(11) 		NOT NULL,
+  	date_month_number 	 	int(11) 		NOT NULL,
+  	date_week 	         	int(11) 		NOT NULL,
+  	date_day 		        int(11) 		NOT NULL
 );
 --
 -- Dumping data for table `date_dimension`
 --
-DELIMITER //
 DROP PROCEDURE IF EXISTS createdatedimension;
+DELIMITER //
 CREATE PROCEDURE createdatedimension()
 BEGIN
    DECLARE v_full_date DATETIME;
@@ -85,9 +89,9 @@ CALL createdatedimension();
 --
 DROP TABLE IF EXISTS time_dimension;
 CREATE TABLE time_dimension (
-  time_id 	    int(11) 	NOT NULL,
+  time_id 	    	int(11) 	NOT NULL,
   time_hour 		int(11) 	NOT NULL,
-  time_minute 	int(11) 	NOT NULL
+  time_minute 		int(11) 	NOT NULL
 );
 --
 -- Dumping data for table `time_dimension`
@@ -119,10 +123,10 @@ CALL createtimedimension();
 --
 DROP TABLE IF EXISTS reservasolap;
 CREATE TABLE reservasolap (
-  location_id 	varchar(255) 	NOT NULL,
-  user_id 		varchar(9) 		NOT NULL,
-  date_id 		varchar(7)		NOT NULL,
-  time_id 		varchar(5)	 	NOT NULL,
+  location_id 	int(11) 		NOT NULL,
+  user_id 		int(11) 		NOT NULL,
+  date_id 		int(11)			NOT NULL,
+  time_id 		int(11)		 	NOT NULL,
   montante 		varchar(255) 	NOT NULL,
   duracao		varchar(255) 	NOT NULL
 );
@@ -136,9 +140,9 @@ INSERT INTO reservasolap
 			datediff(data_fim, data_inicio) as duracao
 	FROM reserva NATURAL JOIN aluga NATURAL JOIN oferta NATURAL JOIN paga
       INNER JOIN location_dimension ON
-      aluga.morada = location_dimension.morada AND
-      (aluga.codigo = location_dimension.codigo_posto OR
-      aluga.codigo = location_dimension.codigo_espaco)
+      aluga.morada = location_dimension.location_morada AND
+      (aluga.codigo = location_dimension.location_codigo_posto OR
+      aluga.codigo = location_dimension.location_codigo_espaco)
       INNER JOIN user_dimension ON
-      aluga.nif = user_dimension.nif
+      aluga.nif = user_dimension.user_nif
 ;
